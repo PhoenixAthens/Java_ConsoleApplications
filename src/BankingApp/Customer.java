@@ -27,7 +27,7 @@ public class Customer {
         if(this==obj)return true;
         if(obj.getClass()!=getClass() || obj==null)return false;
         Customer cust=(Customer)obj;
-        return (nameOfCustomer.equals(cust.nameOfCustomer)) && (InitialTransaction==cust.InitialTransaction) && (Transactions.equals(cust.Transactions);
+        return (nameOfCustomer.equals(cust.nameOfCustomer)) && (InitialTransaction==cust.InitialTransaction) && (Transactions.equals(cust.Transactions));
     }                                                                                                             
 
 }

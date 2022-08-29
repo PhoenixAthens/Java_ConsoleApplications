@@ -12,7 +12,7 @@ public class Branch {
     public boolean AddCustomer(String name,double initialTransaction){
         Customer customer=new Customer(name,initialTransaction);
         for(Customer c:CustomerArray){
-            if(c.equals(customer){
+            if(c.equals(customer)){
                 System.out.println("Customer exists!");
                 return false;
             }
@@ -51,7 +51,7 @@ public class Branch {
         List<Customer> listOfCustomersWithTheSameName=new ArrayList<>();
         for(Customer c:CustomerArray){
             String customerName=c.ShowCustomerName();
-            if(customerName.equals(enterCustomerName){
+            if(customerName.equals(enterCustomerName)){
                 listOfCustomersWithTheSameName.add(c);
             }
                
@@ -64,6 +64,7 @@ public class Branch {
    }  
    public boolean addTransactions(double amount){
    //yet to be implemented!!
+       return false;
    }
        
 }
