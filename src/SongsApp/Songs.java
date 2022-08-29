@@ -69,6 +69,4 @@ public class Songs implements Comparable<Songs>{
         return result;
     }
 
-    //continue with tim at 3:20 (linked list part1)
-
 }
