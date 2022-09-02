@@ -3,27 +3,47 @@ package BankingApp;
 import java.util.*;
 
 public class Branch {
+    private static Scanner scan=new Scanner(System.in);
     private String BranchName;
     private final ArrayList<Customer> CustomerArray;
     public Branch(String name){
         this.BranchName=name;
         this.CustomerArray=new ArrayList<>();
     }
-    public boolean AddCustomer(String name,double initialTransaction){
-        Customer customer=new Customer(name,initialTransaction);
+    public boolean AddCustomer(String name){
+        Customer customer=new Customer(name,0.00);
         for(Customer c:CustomerArray){
             if(c.equals(customer)){
-                System.out.println("Customer exists!");
+                System.out.println("Customer already exists!");
                 return false;
             }
         }       
         boolean result=CustomerArray.add(customer);
-        System.out.println("Customer Added!");
+        System.out.println("New Customer Added!");
+        AutomaticSort(CustomerArray);
         return true;
     }
     public void showTransactions(String EnterName){
+        List<Customer> listObtained=SearchCustomer(EnterName);
+        if(listObtained!=null){
+            for(Customer c:listObtained){
+                System.out.println(listObtained.indexOf(c)+": "+c.getCustomerID()+" :: "+c.getNameOfCustomer());
+            }
+            System.out.print("Enter customer ID for Specific details: ");
+            if(scan.hasNextLong()){
+                long id=scan.nextLong();
+                scan.nextLine();
+                checkOutAParticularCustomer(listObtained,id);
+            }else{
+                System.out.println("Invalid Customer ID");
+                scan.nextLine();
+            }
 
-        if(CustomerArray.contains(EnterName)){
+        }else{
+            System.out.println("Customer not found!");
+        }
+
+        /*if(CustomerArray.contains(EnterName)){
             for(Customer c:CustomerArray){
                 if(c.ShowCustomerName().equals(EnterName)){
                     c.ShowTransactions();
@@ -31,7 +51,7 @@ public class Branch {
             }
         }else{
             System.out.println("Customer Not Found!");
-        }
+        }*/
 
     }
     public String getBranchName(){
@@ -65,6 +85,17 @@ public class Branch {
    public boolean addTransactions(double amount){
    //yet to be implemented!!
        return false;
+   }
+   public void AutomaticSort(List<Customer> listOfCustomers){
+        listOfCustomers.sort(null);
+   }
+   public void checkOutAParticularCustomer(List<Customer> listFromSearch,long CustomerID){
+        for(Customer c:listFromSearch){
+            if(c.getCustomerID()==CustomerID){
+                System.out.println("Customer Data: ");
+                System.out.println(c);
+            }
+        }
    }
        
 }

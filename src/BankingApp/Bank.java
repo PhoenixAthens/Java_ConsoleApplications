@@ -28,11 +28,11 @@ public class Bank {
     public void addCustomerTo(String nameOfCustomer,double initialTransaction){
         PrintBranches();
         System.out.println("Enter branch name from above list!");
-        String name=scan.nextLine();
-        for(Branch i:Branches){
-            String NAME=i.getBranchName();
-            if(NAME.equals(name)){
-                i.AddCustomer(nameOfCustomer,initialTransaction);
+        String name=scan.nextLine();//change this to select number rather than name
+        for(Branch branch:Branches){
+            String nameOfBranch=branch.getBranchName();
+            if(nameOfBranch.equals(name)){
+                branch.AddCustomer(nameOfCustomer);
             }
         }
     }
