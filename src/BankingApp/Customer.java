@@ -18,14 +18,14 @@ public class Customer implements Comparable<Customer>{
     }
     public void ShowTransactions(){
         for(int i=0;i<Transactions.size();i++){
-            System.out.println(i+": "+Transactions.get(i));
+            System.out.println(i+1+": "+Transactions.get(i));
         }
     }
     public String ShowCustomerName(){
         return nameOfCustomer;
     }
-    public void AddToTransactions(Double amount){
-        Transactions.add(amount);
+    public boolean AddToTransactions(Double amount){
+        return Transactions.add(amount);
     }
     public boolean equals(Object obj){
         if(this==obj)return true;
@@ -34,9 +34,9 @@ public class Customer implements Comparable<Customer>{
         return (nameOfCustomer.equals(customer.nameOfCustomer)) && (CustomerID==customer.CustomerID);
     }
     public int compareTo(Customer c){
-        int result=this.nameOfCustomer.compareTo(c.nameOfCustomer);
+        int result=Long.compare(CustomerID,c.CustomerID);
         if(result==0){
-            result=Double.compare(this.InitialTransaction,c.InitialTransaction);
+            result=nameOfCustomer.compareTo(c.nameOfCustomer);
         }
         return result;
     }

@@ -2,7 +2,7 @@ package BankingApp;
 
 import java.util.*;
 
-public class Branch {
+public class Branch implements Comparable<Branch>{
     private static Scanner scan=new Scanner(System.in);
     private String BranchName;
     private final ArrayList<Customer> CustomerArray;
@@ -26,47 +26,42 @@ public class Branch {
     public void showTransactions(String EnterName){
         List<Customer> listObtained=SearchCustomer(EnterName);
         if(listObtained!=null){
-            for(Customer c:listObtained){
-                System.out.println(listObtained.indexOf(c)+": "+c.getCustomerID()+" :: "+c.getNameOfCustomer());
-            }
-            System.out.print("Enter customer ID for Specific details: ");
-            if(scan.hasNextLong()){
-                long id=scan.nextLong();
-                scan.nextLine();
-                checkOutAParticularCustomer(listObtained,id);
+            if(listObtained.size()==1){
+                System.out.println(listObtained.get(0).getCustomerID()+" :: "+listObtained.get(0).getNameOfCustomer()+"\n");
+                listObtained.get(0).ShowTransactions();
             }else{
-                System.out.println("Invalid Customer ID");
-                scan.nextLine();
-            }
+                for(Customer c:listObtained){
+                    System.out.println(c);
+                }
+                System.out.print("Enter customer ID for Specific details: ");
+                if(scan.hasNextLong()){
+                    long id=scan.nextLong();
+                    scan.nextLine();
+                    checkOutAParticularCustomer(listObtained,id);
+                }else{
+                    System.out.println("Invalid Customer ID");
+                    scan.nextLine();
+                }
 
-        }else{
+            }
+        }else {
             System.out.println("Customer not found!");
         }
-
-        /*if(CustomerArray.contains(EnterName)){
-            for(Customer c:CustomerArray){
-                if(c.ShowCustomerName().equals(EnterName)){
-                    c.ShowTransactions();
-                }
-            }
-        }else{
-            System.out.println("Customer Not Found!");
-        }*/
-
     }
     public String getBranchName(){
         return BranchName;
     }
+    public void setBranchName(String newBranchName){
+        this.BranchName=newBranchName;
+    }
     public void PrintCustomers(){
-        for(Customer i:CustomerArray){
-            System.out.println(CustomerArray.indexOf(i)+": "+i.ShowCustomerName());
+        for(Customer c:CustomerArray){
+            System.out.println(c);
         }
     }
-    //Missing functionality: findCustomer and addTransaction
     public ArrayList<Customer> getCustomerArray(){
         return CustomerArray;
     }
-    //Missing functionalities are marked as @Deprecated until the implementation is tested in real-time!
     public List<Customer> SearchCustomer(String enterCustomerName){
         List<Customer> listOfCustomersWithTheSameName=new ArrayList<>();
         for(Customer c:CustomerArray){
@@ -76,14 +71,18 @@ public class Branch {
             }
                
         }
-        if(listOfCustomersWithTheSameName.isEmpty()){
-            System.out.println("Customer with name: "+enterCustomerName+" not found!");
-            return null;
-        }//when putting this method into implementation remember to receive the return value and there check if you get null or an array
         return listOfCustomersWithTheSameName;
    }  
-   public boolean addTransactions(double amount){
-   //yet to be implemented!!
+   public boolean addTransactions(String name,long ID,double amount){
+        List<Customer> returnedList=SearchCustomer(name);
+        if(returnedList!=null){
+            for(Customer c:returnedList){
+                if(c.getCustomerID()==ID){
+                    return c.AddToTransactions(amount);
+                }
+            }
+        }
+
        return false;
    }
    public void AutomaticSort(List<Customer> listOfCustomers){
@@ -94,8 +93,15 @@ public class Branch {
             if(c.getCustomerID()==CustomerID){
                 System.out.println("Customer Data: ");
                 System.out.println(c);
+                c.ShowTransactions();
             }
         }
    }
+   public int compareTo(Branch b){
+        int result=BranchName.compareTo(b.BranchName);
+        return result;
+   }
+
+
        
 }

@@ -1,5 +1,4 @@
 package BankingApp;
-import java.util.ArrayList;
 import java.util.Scanner;
 public class Main {
     private static final Scanner scan=new Scanner(System.in);
@@ -41,76 +40,64 @@ public class Main {
     private static void ShowListOfBranches(){
         bank.PrintBranches();
         System.out.println(bank.getBankName()+" has a total of "+bank.getBranches().size());
-        //System.out.println("Branches Successfully printed");
     }
     private static void PrintListOfCustomers(){
-        System.out.println("Enter name of Branch: ");
+        System.out.print("Enter name of Branch: ");
         String name=scan.nextLine();
-        for(Branch i:bank.getBranches()) {
-            String nameOfBranch=i.getBranchName();
-            if (nameOfBranch.equals(name)) {
-                i.PrintCustomers();
-            } else {
-                System.out.println("Invalid name!");
-            }
-        }
+        bank.PrintInformationAboutParticularBranch(name);
     }
+
     private static void TransactionsOfCustomer(){
         ShowListOfBranches();
-        System.out.println("Enter the name of Branch");
+        System.out.print("Enter the name of Branch: ");
         String nameOfBranch=scan.nextLine();
         System.out.print("Enter the customer's name: ");
         String name=scan.nextLine();
-        for(Branch i: bank.getBranches()){
-            String nameOf=i.getBranchName();
-            if(nameOf.equals(nameOfBranch)){
-                for(Customer c:i.getCustomerArray()){
-                    String nameOfCustomer=c.ShowCustomerName();
-                    if(nameOfCustomer.equals(name)){
-                        c.ShowTransactions();
-                        return;
-                    }
-                }
-
-            }
-        }
-        System.out.println("Customer not found!");
+        bank.showTransactionForParticularCustomer(nameOfBranch,name);
     }
     private static void AddBranch(){
         System.out.print("Enter Branch name: ");
         String name=scan.nextLine();
-        bank.addNewBranch(name);
-    }
-    private static void addCustomer(){
-        System.out.print("Enter Customer name: ");
-        String name=scan.nextLine();
-        bank.addCustomerTo(name,0.0);
-    }
-    private static void AddTransaction(){
-        System.out.print("Enter the Customer's name: ");
-        String name=scan.nextLine();
-        System.out.print("Enter the transaction amount: ");
-        Double amount=scan.nextDouble();
-        scan.nextLine();
-        for(Branch i:bank.getBranches()){
-                for(Customer j:i.getCustomerArray()) {
-                    String nameOfCustomer=j.ShowCustomerName();
-                    if(name.equals(nameOfCustomer)){
-                        System.out.println("Customer already exists! in  Branch: " + i.getBranchName());
-                        System.out.println("Adding Transaction to existing Customer's Billings!");
-                        j.AddToTransactions(amount);
-                        System.out.println("Transaction Complete!");
-                    }
-                }
+        if(bank.addNewBranch(name)){
+            System.out.println("New Branch Created!");
+        }else{
+            System.out.println("Branch name already in use!!");
         }
     }
-    /*
-    * Now if you think because methods are static so you can invoke them in Other classes
-    * you are right you can do Main.AddBranch and etc because they won't be worth calling
-    * however there is Main.main that is invoking the main method of class that will work but we don't need it so we can
-    * go and declare all method of our Main class as private.
-    * You can also declare main method as private as well but then it won't work so declare it as public only;
-    * */
+    private static void addCustomer(){
+        ShowListOfBranches();
+        System.out.print("Enter Branch Name: ");
+        String branchName=scan.nextLine();
+        if(bank.SearchForBranch(branchName)==null){
+            System.out.println("Invalid branch name!");
+            return;
+        }
+        System.out.print("Enter Customer name: ");
+        String name=scan.nextLine();
+        if(bank.addCustomerTo(branchName,name)){
+            System.out.println("Customer: "+name+", has been added to branch: "+branchName);
+        }else{
+            System.out.println("Customer not added!");
+        }
+    }
+    private static void AddTransaction() {
+        System.out.print("Enter BranchName: ");
+        String nameOfBranch=scan.nextLine();
+        Branch b=bank.SearchForBranch(nameOfBranch);
+        b.PrintCustomers();
+        System.out.print("Enter the Customer's name: ");
+        String name = scan.nextLine();
+        System.out.print("Enter Customer ID: ");
+        long id=scan.nextLong();
+        System.out.print("Enter the transaction amount: ");
+        double amount = scan.nextDouble();
+        if(bank.AddTransactionToParticularCustomer(nameOfBranch,name,id,amount)){
+            System.out.println("Transaction(Withdrawal) successful1 ");
+        }else{
+            System.out.println("Transaction unsuccessful!");
+        }
+    }
+
 
 
 }
