@@ -26,6 +26,7 @@ public class Album {
     }
     public String getAlbumName(){
         return AlbumName;
+
     }
     private Songs findSongs(String title){
         for(Songs s:songs) {

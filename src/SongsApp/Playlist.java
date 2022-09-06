@@ -19,7 +19,7 @@ public class Playlist {
     }
     public void PrintPlaylist(){
         for(Songs s:playlist){
-            System.out.println("s");
+            System.out.println(s);
         }
     }
 }
