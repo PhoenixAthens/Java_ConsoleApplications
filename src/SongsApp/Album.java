@@ -24,6 +24,11 @@ public class Album {
     public ArrayList<Songs> getArrayListOfSongs(){
         return songs;
     }
+    public void PrintAlbum(){
+        for(Songs s:songs){
+            System.out.println(s);
+        }
+    }
     public String getAlbumName(){
         return AlbumName;
 
@@ -68,5 +73,16 @@ public class Album {
             return false;
         }
         return false;
+    }
+    public String toString(){
+        return "[Album Name: "+AlbumName+", Artist Name: "+artistName+"]";
+    }
+    public boolean equals(Object obj){
+        if(this==obj)return true;
+        if(obj instanceof Album){
+            Album album=(Album) obj;
+            return AlbumName.equals(album.AlbumName) && artistName.equals(album.artistName);
+        }
+        return super.equals(obj);
     }
 }
