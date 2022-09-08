@@ -5,8 +5,10 @@ import java.util.*;
 public class MusicsApp {
     private Scanner scn=new Scanner(System.in);
     private final ArrayList<Album> albumsCollection;
+    private final ArrayList<Playlist> listOFPlaylists;
     public MusicsApp(){
         this.albumsCollection=new ArrayList<>();
+        this.listOFPlaylists=new ArrayList<>();
     }
     //In Playlist add method to add entire album to the playlist;
     public boolean addAlbumToMemory(Album album){
@@ -20,11 +22,18 @@ public class MusicsApp {
         return albumsCollection;
     }
     public void PrintAvailableAlbums(){
-        System.out.println("+++++++++++++++++++++++++++");
-        for(Album a:albumsCollection){
-            System.out.println(a);
+        if(albumsCollection.isEmpty()){
+            System.out.println("\n+++++++++++++++++++++++++++");
+            System.out.println("No Albums available!!");
+            System.out.println("+++++++++++++++++++++++++++\n");
+        }else{
+            System.out.println("\n+++++++++++++++++++++++++++");
+            for(Album a:albumsCollection){
+                System.out.println(a);
+            }
+            System.out.println("+++++++++++++++++++++++++++\n");
         }
-        System.out.println("+++++++++++++++++++++++++++");
+
     }
     public boolean RemoveAlbumFromMemory(String AlbumName){
         Iterator<Album> it=albumsCollection.iterator();
@@ -36,6 +45,50 @@ public class MusicsApp {
             }
         }
         return false;
+    }
+    public boolean CreatePlaylist(Playlist playlist){
+        if(listOFPlaylists.add(playlist)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public void PrintAvailablePlaylists(){
+        if(listOFPlaylists.isEmpty()){
+            System.out.println("\n+++++++++++++++++++++++++++");
+            System.out.println("No playlist available!!");
+            System.out.println("+++++++++++++++++++++++++++\n");
+        }
+        else {
+            System.out.println("\n+++++++++++++++++++++++++++");
+            for(Playlist playlist:listOFPlaylists){
+                System.out.println(playlist);
+            }
+            System.out.println("+++++++++++++++++++++++++++\n");
+        }
+    }
+    public int removePlaylist(String name){
+        Playlist retrieved=searchForPlaylist(name);
+        if(retrieved!=null){
+            int index=listOFPlaylists.indexOf(retrieved);
+            var result=listOFPlaylists.remove(retrieved);
+            return index;
+        }else{
+            return -1;
+        }
+    }
+    public void overWriteExistingAlbum(Playlist existing, Playlist newlyCreated){
+        int target=removePlaylist(existing.getPlaylistName());
+
+        listOFPlaylists.set(target,newlyCreated);
+    }
+    public Playlist searchForPlaylist(String name){
+        for(Playlist play:listOFPlaylists){
+            if(play.getPlaylistName().equals(name)){
+                return play;
+            }
+        }
+        return null;
     }
     public Album SearchForAlbum(String nameOfAlbum){
         for(Album album:albumsCollection){
@@ -58,7 +111,7 @@ public class MusicsApp {
                     scn.nextLine();
                     switch(input){
                         case 0-> PrintOptions();
-                        case 1-> PrintPlaylist(playlist);
+                        case 1-> PrintSongsInPlaylist(playlist);
                         case 2->{
                             if(it.hasNext()){
                                 System.out.println("Now play: "+it.next());
@@ -123,7 +176,7 @@ public class MusicsApp {
         }
     }
 
-    private void PrintPlaylist(List<Songs> playlist){
+    private void PrintSongsInPlaylist(List<Songs> playlist){
         System.out.println("===============================");
         for(Songs s:playlist){
             System.out.println(s);

@@ -1,9 +1,9 @@
 package SongsApp;
-import java.util.*;
+
+import java.util.LinkedList;
 public class Playlist {
     private LinkedList<Songs> playlist;
     private String playlistName;
-    private int numberOfSongs=0;
     public Playlist(String nameOfPlaylist){
         this.playlist=new LinkedList<>();
         this.playlistName=nameOfPlaylist;
@@ -21,5 +21,8 @@ public class Playlist {
         for(Songs s:playlist){
             System.out.println(s);
         }
+    }
+    public String toString(){
+        return "[Playlist Name: "+playlistName+", Number of Songs: "+playlist.size()+"]";
     }
 }

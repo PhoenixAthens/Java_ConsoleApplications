@@ -1,5 +1,8 @@
 package SongsApp;
-import java.util.*;
+
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
 public class Main {
     private static MusicsApp musicApp=new MusicsApp();
     private static Scanner scan=new Scanner(System.in);
@@ -30,17 +33,25 @@ public class Main {
 //
 //
 //    }
+    private static List<Album> returnListOfAvailableAlbums(){
+        return musicApp.returnAlbumCollection();
+    }
+    private static void PrintAvailableAlbums(){
+        musicApp.PrintAvailableAlbums();
+    }
     private static void PrintOptions(){
         var options="(1)->Create Album \n" +
                 "(2)->Add Song To album \n" +
                 "(3)->Create playlist \n" +
-                "(4)->Add Songs to playlist \n" +
-                "(5)->Enter the player\n"+
-                "(6)->Print Available Albums\n"+
-                "(7)->Remove Album From Memory\n"+
-                "(8)->Search for Album\n"+
-                "(9)->Exit Songs App\n"+
-                "(10)->Print Available Options\n";
+                "(4)->Print available playlists\n"+
+                "(5)->Remove existing Playlist\n"+
+                "(6)->Add Songs to playlist \n" +
+                "(7)->Enter the player\n"+
+                "(8)->Print Available Albums\n"+
+                "(9)->Remove Album From Memory\n"+
+                "(10)->Search for Album\n"+
+                "(11)->Exit Songs App\n"+
+                "(12)->Print Available Options\n";
         System.out.println(options);
     }
     //if user on adding songs to albums enter a number use the add to album method which adds using index number
@@ -63,37 +74,98 @@ public class Main {
         return step;
     }
     public static boolean AddSongToAlbum(){
-        System.out.print("Enter Album Name: ");
-        String albumName=scan.nextLine();
-        Album album=musicApp.SearchForAlbum(albumName);
-        if(album!=null){
-            boolean innerFlag=true;
-            while(innerFlag){
-                System.out.print("Enter Song name: ");
-                String songName=scan.nextLine();
-                System.out.print("Enter Song Duration: ");
-                double songDuration=scan.nextDouble();
-                album.addSongs(songName,songDuration);
-                System.out.println("Add more Songs? (1=>Yes/2=>No)");
-                if(scan.hasNextInt()){
-                    int input=scan.nextInt();
-                    if(input!=1){
-                        album.PrintAlbum();
-                        innerFlag=false;
+        List<Album> listOfAvailableAlbums=returnListOfAvailableAlbums();
+        if(!listOfAvailableAlbums.isEmpty()){
+            PrintAvailableAlbums();
+            System.out.print("Enter Album Name: ");
+            String albumName=scan.nextLine();
+            Album album=musicApp.SearchForAlbum(albumName);
+            if(album!=null){
+                boolean innerFlag=true;
+                while(innerFlag){
+                    System.out.print("Enter Song name: ");
+                    String songName=scan.nextLine();
+                    try{
+                        System.out.print("Enter Song Duration: ");
+                        double songDuration = scan.nextDouble();
+                        scan.nextLine();
+                        album.addSongs(songName,songDuration);
+                        System.out.println("Add more Songs? (1=>Yes/2=>No)");
+                        if(scan.hasNextInt()){
+                            int input=scan.nextInt();
+                            scan.nextLine();
+                            if(input!=1){
+                                System.out.println("\n==================");
+                                album.PrintAlbum();
+                                innerFlag=false;
+                                System.out.println("==================\n");
+                            }
+                        }else{
+                            System.out.println("\n==================");
+                            album.PrintAlbum();
+                            System.out.println("==================\n");
+                            System.out.println("Invalid input!!, Breaking out!");
+                            innerFlag=false;
+
+                        }
+                    }catch(InputMismatchException ex){
+                        System.out.println("\n==========================");
+                        System.out.println("Exception: "+ex.getClass().getSimpleName());
+                        System.out.println("============================\n");
+                        scan.nextLine();
                     }
-                }else{
-                    album.PrintAlbum();
-                    System.out.println("Invalid input!!, Breaking out!");
-                    innerFlag=false;
 
                 }
-            }
-            return true;
+                return true;
 
+            }else{
+                System.out.println("\n==================");
+                System.out.println("Album not found!");
+                System.out.println("==================\n");
+                return false;
+            }
         }else{
-            System.out.println("Album not found!");
+            System.out.println("\n==================");
+            System.out.println("No Albums Available!!");
+            System.out.println("==================\n");
             return false;
         }
+    }
+    public static boolean createPlaylist(){
+        System.out.print("Enter playlist name: ");
+        String playlistName=scan.nextLine();
+        var result=musicApp.searchForPlaylist(playlistName);
+        if(result==null){
+            Playlist playlist=new Playlist(playlistName);
+            var submit=musicApp.CreatePlaylist(playlist);
+            if(submit) return true;
+            return false;
+        }
+        System.out.println("\n===================");
+        System.out.println("Album already exist!");
+        System.out.println("=====================\n");
+        System.out.print("Do you want to overwrite existing playlist (1=>Yes/2=>No):: ");
+        if(scan.hasNextInt()){
+            int input=scan.nextInt();
+            if(input!=1){
+                System.out.println("\n===================");
+                System.out.println("Aborting procedure!!");
+                System.out.println("=====================\n");
+                return false;
+            }else{
+                musicApp.overWriteExistingAlbum(result,new Playlist(playlistName));
+                System.out.println("\n=====================");
+                musicApp.PrintAvailablePlaylists();
+                System.out.println("=======================\n");
+                return true;
+            }
+        }else{
+            System.out.println("\n=====================");
+            System.out.println("Invalid input, Aborting Procedure!!");
+            System.out.println("=======================\n");
+            return false;
+        }
+
     }
     public static void main(String...args){
         boolean flag=true;
@@ -122,11 +194,25 @@ public class Main {
                         }else{
                             System.out.println("Error Adding Songs to Album!!");
                         }
-                    }case 10->PrintOptions();
+                    }
+                    case 3->{
+
+                        var result=createPlaylist();
+                        if(result){
+                            System.out.println("\n=======================");
+                            System.out.println("Playlist successfully created!!");
+                            System.out.println("=======================\n");
+                        }
+                    }case 4-> musicApp.PrintAvailablePlaylists();
+
+
+                    case 10->PrintOptions();
 
                 }
             }else{
+                System.out.println("==================");
                 System.out.println("Invalid entry!!");
+                System.out.println("==================");
                 scan.nextLine();
             }
 

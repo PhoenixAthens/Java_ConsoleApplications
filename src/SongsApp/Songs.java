@@ -1,6 +1,7 @@
 package SongsApp;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.text.*;
 
 public class Songs implements Comparable<Songs>{
     private SimpleDateFormat sdf=new SimpleDateFormat("mm:ss");
