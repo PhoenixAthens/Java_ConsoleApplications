@@ -97,6 +97,20 @@ public class MusicsApp {
             }
         }return null;
     }
+    public Album lookUpForSongThroughAllAlbums(String nameOfSong){
+        if(albumsCollection.isEmpty()){
+            return null;
+        }else{
+            for(Album album:albumsCollection){
+                List<Songs> songList=album.getArrayListOfSongs();
+                if(!songList.isEmpty()){
+                    Songs s=album.findSongs(nameOfSong);
+                    if(s!=null)return album;
+                }
+            }
+        }
+        return null;
+    }
     public void playSongs(List<Songs> playlist){
         ListIterator<Songs> it=playlist.listIterator();
         boolean flag=true;
@@ -194,6 +208,9 @@ public class MusicsApp {
                 "(6)->Quit\n";
         System.out.println(buff);
 
+    }
+    public List<Playlist> getListOfPlaylists(){
+        return listOFPlaylists;
     }
 
 

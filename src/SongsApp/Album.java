@@ -34,7 +34,7 @@ public class Album {
         return AlbumName;
 
     }
-    private Songs findSongs(String title){
+    public Songs findSongs(String title){
         for(Songs s:songs) {
             if ((s.getTitle()).equals(title)) return s;
         }

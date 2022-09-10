@@ -41,17 +41,18 @@ public class Main {
     }
     private static void PrintOptions(){
         var options="(1)->Create Album \n" +
-                "(2)->Add Song To album \n" +
-                "(3)->Create playlist \n" +
-                "(4)->Print available playlists\n"+
-                "(5)->Remove existing Playlist\n"+
-                "(6)->Add Songs to playlist \n" +
-                "(7)->Enter the player\n"+
-                "(8)->Print Available Albums\n"+
-                "(9)->Remove Album From Memory\n"+
-                "(10)->Search for Album\n"+
-                "(11)->Exit Songs App\n"+
-                "(12)->Print Available Options\n";
+                "(2)->Remove Album\n"+
+                "(3)->Add Song To album \n" +
+                "(4)->Create playlist \n" +
+                "(5)->Print available playlists\n"+
+                "(6)->Remove existing Playlist\n"+
+                "(7)->Add Songs to playlist \n" +
+                "(8)->Enter the player\n"+
+                "(9)->Print Available Albums\n"+
+                "(10)->Remove Album From Memory\n"+
+                "(11)->Search for Album\n"+
+                "(12)->Exit Songs App\n"+
+                "(13)->Print Available Options\n";
         System.out.println(options);
     }
     //if user on adding songs to albums enter a number use the add to album method which adds using index number
@@ -72,6 +73,31 @@ public class Main {
         musicApp.PrintAvailableAlbums();
 
         return step;
+    }
+    private static void RemoveAlbum(){
+        List<Album> albums=musicApp.returnAlbumCollection();
+        if(albums.isEmpty()){
+            System.out.println("\n===================================");
+            System.out.println("No albums available!!");
+            System.out.println("=====================================\n");
+        }
+        else{
+            musicApp.PrintAvailableAlbums();
+            System.out.print("Enter album name: ");
+            String albumName=scan.nextLine();
+            //Album album=musicApp.SearchForAlbum(albumName);
+            var result=musicApp.RemoveAlbumFromMemory(albumName);
+            if(result){
+                System.out.println("\n===================================");
+                System.out.println("Album Successfully removed!");
+                System.out.println("=====================================\n");
+            }
+            else{
+                System.out.println("\n===================================");
+                System.out.println("Album not found!");
+                System.out.println("=====================================\n");
+            }
+        }
     }
     public static boolean AddSongToAlbum(){
         List<Album> listOfAvailableAlbums=returnListOfAvailableAlbums();
@@ -167,6 +193,83 @@ public class Main {
         }
 
     }
+    public static boolean removePlaylist(){
+        List<Playlist> available=musicApp.getListOfPlaylists();
+        if(available.isEmpty()){
+            return false;
+        }else{
+            musicApp.PrintAvailablePlaylists();
+            System.out.println("Enter playlist name: ");
+            String name=scan.nextLine();
+            int process=musicApp.removePlaylist(name);
+            return process != -1;
+        }
+    }
+    public static void AddSongsToPlaylist(){
+        List<Playlist> playlistList=musicApp.getListOfPlaylists();
+        if(playlistList.isEmpty()){
+            System.out.println("\n========================");
+            System.out.println("No Playlist found!!");
+            System.out.println("==========================\n");
+        }else{
+            musicApp.PrintAvailablePlaylists();
+            System.out.print("Enter playlist name: ");
+            String nameOfPlaylist=scan.nextLine();
+            Playlist play=musicApp.searchForPlaylist(nameOfPlaylist);
+            if(play!=null){
+                System.out.print("Enter name of Song: ");
+                String nameOfSong=scan.nextLine();
+                Album album2=musicApp.SearchForAlbum(nameOfSong);
+                if(album2!=null){
+                    if(album2.getArrayListOfSongs().isEmpty()){
+                        System.out.println("\n=========================================");
+                        System.out.println("You have album name instead of song name!!");
+                        System.out.println("==========================================\n");
+                        System.out.println("\n=========================================");
+                        System.out.println("          !!The album is empty!!           ");
+                        System.out.println("==========================================\n");
+
+
+                    }
+                    else{
+                        System.out.println("\n=========================================");
+                        System.out.println("You have album name instead of song name!!");
+                        System.out.println("==========================================\n");
+                        System.out.println("\n=========================================");
+                        System.out.println("Adding All Songs from album to playlist!!");
+                        System.out.println("===========================================\n");
+                        for(Songs s: album2.getArrayListOfSongs()){
+                            album2.AddSongsToPlaylist(s.getTitle(),play.getPlaylist());
+                        }
+                        return;
+
+                    }
+
+                }
+                Album album=musicApp.lookUpForSongThroughAllAlbums(nameOfSong);
+                if(album!=null){
+                    var result=album.AddSongsToPlaylist(nameOfSong,play.getPlaylist());
+                    if(result){
+                        System.out.println(nameOfSong+" added to playlist!!");
+                    }
+                    else{
+                        System.out.println("\n=========================================");
+                        System.out.println("Error Adding "+nameOfSong+" to playlist!!");
+                        System.out.println("==========================================\n");
+                    }
+                }else{
+
+                    System.out.println("\n========================");
+                    System.out.println("Song not found!!");
+                    System.out.println("=========================\n");
+                }
+            }else{
+                System.out.println("\n========================");
+                System.out.println("Playlist not found!!");
+                System.out.println("=========================\n");
+            }
+        }
+    }
     public static void main(String...args){
         boolean flag=true;
         System.out.println("\t\t\t\t+++++++++++++++++++++++++==WELCOME==+++++++++++++++++++++++++");
@@ -186,7 +289,9 @@ public class Main {
                             System.out.println("Error saving album!");
                         }
                     }
-                    case 2->{
+                    case 2->RemoveAlbum();
+
+                    case 3->{
                         System.out.println("\t\t\t\t+++++++++++++++++++++++++==Adding Songs to Album==+++++++++++++++++++++++++");
                         boolean result=AddSongToAlbum();
                         if(result){
@@ -195,7 +300,7 @@ public class Main {
                             System.out.println("Error Adding Songs to Album!!");
                         }
                     }
-                    case 3->{
+                    case 4->{
 
                         var result=createPlaylist();
                         if(result){
@@ -203,8 +308,20 @@ public class Main {
                             System.out.println("Playlist successfully created!!");
                             System.out.println("=======================\n");
                         }
-                    }case 4-> musicApp.PrintAvailablePlaylists();
-
+                    }case 5-> musicApp.PrintAvailablePlaylists();
+                    case 6->{
+                        var result=removePlaylist();
+                        if(result){
+                            System.out.println("\n=============================");
+                            System.out.println("Playlist successfully removed!!");
+                            System.out.println("===============================\n");
+                        }else{
+                            System.out.println("\n=============================");
+                            System.out.println("Error removing playlist");
+                            System.out.println("===============================\n");
+                        }
+                    }
+                    case 7->AddSongsToPlaylist();
 
                     case 10->PrintOptions();
 
