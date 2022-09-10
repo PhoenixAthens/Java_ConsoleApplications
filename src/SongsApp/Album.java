@@ -25,9 +25,17 @@ public class Album {
     public ArrayList<Songs> getArrayListOfSongs(){
         return songs;
     }
-    public void PrintAlbum(){
-        for(Songs s:songs){
-            System.out.println(s);
+    public void  PrintAlbum(){
+        if(!songs.isEmpty()){
+            System.out.println("\n================================");
+            for(Songs s:songs){
+                System.out.println(s);
+            }
+            System.out.println("================================\n");
+        }else{
+            System.out.println("\n================================");
+            System.out.println("      !!The album is empty!!      ");
+            System.out.println("================================\n");
         }
     }
     public String getAlbumName(){

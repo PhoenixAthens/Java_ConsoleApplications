@@ -10,7 +10,6 @@ public class MusicsApp {
         this.albumsCollection=new ArrayList<>();
         this.listOFPlaylists=new ArrayList<>();
     }
-    //In Playlist add method to add entire album to the playlist;
     public boolean addAlbumToMemory(Album album){
         //if(album.getArrayListOfSongs().isEmpty()) return false;
         //else{
@@ -112,6 +111,7 @@ public class MusicsApp {
         return null;
     }
     public void playSongs(List<Songs> playlist){
+        PrintOptions();
         ListIterator<Songs> it=playlist.listIterator();
         boolean flag=true;
         boolean forward=false;
@@ -128,7 +128,7 @@ public class MusicsApp {
                         case 1-> PrintSongsInPlaylist(playlist);
                         case 2->{
                             if(it.hasNext()){
-                                System.out.println("Now play: "+it.next());
+                                System.out.println("Now playing: "+it.next());
                                 forward=true;
                             }else{
                                 System.out.println("The playlist is empty!");
@@ -175,8 +175,17 @@ public class MusicsApp {
                                 forward=false;
                             }
                         }
-                        case 6->
+                        case 6->{
+                            System.out.println("\n==========================================");
+                            System.out.println("             !!Exiting Player!!             ");
+                            System.out.println("==========================================\n");
                             flag=false;
+                        }
+                        default->{
+                            System.out.println("\n==========================================");
+                            System.out.println("             !!Invalid Choice!!             ");
+                            System.out.println("==========================================\n");
+                        }
 
                     }
 

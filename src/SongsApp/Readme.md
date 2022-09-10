@@ -1,5 +1,5 @@
 # Date: 9/7/2022
-#### Currently working on: Main
+### Currently working on: Main
 ### WorkingMethod :
 >  CreateALbum
 ### Implementation in Progress
@@ -10,10 +10,10 @@
 > Find implementation for those methods.
 
 # Date: 9/8/2022
-### New Field
+## New Field
 > ### Class: MusicApp
 > listOfPlaylist: arrayList to store the various playlists created by the user
-### New methods
+## New methods
 > ### Class: MusicApp
 > #### CreatePlaylist(Playlist playlist): boolean
 > Adds the playlist passes as argument to the arraylist of playlists
@@ -36,7 +36,7 @@
 > prints a playlist as concatenation of its name and number of songs present in it.
 
 # Date: 9/9/2022
-### New Methods
+## New Methods
 > ### Class: Main
 > #### removeAlbum(): void
 > This method removes an album from the list of available albums, the method first checks if the list of albums is 
@@ -49,7 +49,7 @@
 > the playlist doesn't exist the method returns false.
 
 # Date: 9/10/22
-### New Methods
+## New Methods
 > ### Class: Main
 > #### AddSongsToPlaylist(): void
 > checks if the list of playlist is empty, if so outputs the corresponding message to the console, if not asks the user 
@@ -65,3 +65,40 @@
 > list of songs checking if any song's title matches the argument, nameOfSong, if so returns the corresponding album, as 
 > return value of method, this method is used in class main by method AddSongsToPlaylist
 
+# Date: 9/11/22
+## New Methods
+> ### Class: Main
+> #### EnterThePlayer(): void
+> checks if the list of playlist is empty, if not prints the list of available playlists and asks the user to enter 
+> the name of playlist, they wish to play in the player, the name of playlist is passes as argument to searchForPlaylist
+> method, if the name matches any playlist in the list of available playlists the method returns that playlist, if not 
+> then returns null, if the output is non-null, the playSong() method of class musicApp is invoked with playlist passed
+> as argument to the method
+> #### InspectAlbum(): void
+> asks the user to input the album's name, they wish to print songs of!
+> #### InspectPlaylist(): void
+> asks the user to input the playlist's name, they wish to print songs of!
+> 
+> ## Removed Methods
+> ### Class: Main
+> #### SearchForAlbum(): Album
+> The method has been removed from list of options, since the method was unnecessary and similar functionality
+> can be accessed via method SearchForAlbum() in class MusicApp.
+> 
+> ## Unused methods:
+> ### Class: Album
+> #### AddSongsToPlaylist(int trackNumber, List playlist): boolean
+> This method adds song from listOfSongs to playlist, this method is similar to method addSongs, the difference is just 
+> that, method addSongs identifies song on the basis of title and method AddSongsToPlaylist on the basis of index 
+> ### Class: Playlist
+> #### setPlaylistName(String newName): void
+> updates the playlist's name
+> #### PrintPlaylist(): void
+> prints the songs available in the playlist.
+> ### Class: Songs
+> #### composeSong(String title,double duration): Songs
+> creates a new Songs instance on the basis of method's arguments
+> #### setTitle(String newTitle): void
+> updates a song's title
+> #### setDuration(double new Duration): void
+> updates a song's duration

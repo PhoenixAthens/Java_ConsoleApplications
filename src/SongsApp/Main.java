@@ -6,57 +6,26 @@ import java.util.Scanner;
 public class Main {
     private static MusicsApp musicApp=new MusicsApp();
     private static Scanner scan=new Scanner(System.in);
-//    public static void main(String...args){
-//        Album album1=new Album("Little Men","John wayne");
-//        album1.addSongs("Song1",4.32);
-//        album1.addSongs("Song2",5.23);
-//        album1.addSongs("Song3",2.5);
-//        album1.addSongs("Song4",4.5);
-//        Album album2=new Album("Dance to Hell","frank long");
-//        album2.addSongs("SongA",3.45);
-//        album2.addSongs("SongB",1.33);
-//        album2.addSongs("SongC",5.00);
-//        album2.addSongs("SongD",3.67);
-//        musicApp.addAlbumToMemory(album1);
-//        musicApp.addAlbumToMemory(album2);
-//        Playlist playlist=new Playlist("Loving souls");
-//        musicApp.SearchForAlbum("Little Men").AddSongsToPlaylist(1,playlist.getPlaylist());
-//        musicApp.SearchForAlbum("Little Men").AddSongsToPlaylist(2,playlist.getPlaylist());
-//        musicApp.SearchForAlbum("Dance to Hell").AddSongsToPlaylist(3,playlist.getPlaylist());
-//        musicApp.playSongs(playlist.getPlaylist());
-//
-//        //First point use arrayList to get a playlist for adding songs to playlist
-//        //Add methods in playlist.
-//        //In albums collection add a search method
-//        //In Playlist add more methods and those method for playing song reverse, forward and rewind, try them
-//        //out in playlist.
-//
-//
-//    }
     private static List<Album> returnListOfAvailableAlbums(){
         return musicApp.returnAlbumCollection();
     }
-    private static void PrintAvailableAlbums(){
-        musicApp.PrintAvailableAlbums();
-    }
+
     private static void PrintOptions(){
         var options="(1)->Create Album \n" +
                 "(2)->Remove Album\n"+
                 "(3)->Add Song To album \n" +
                 "(4)->Create playlist \n" +
                 "(5)->Print available playlists\n"+
-                "(6)->Remove existing Playlist\n"+
-                "(7)->Add Songs to playlist \n" +
-                "(8)->Enter the player\n"+
-                "(9)->Print Available Albums\n"+
-                "(10)->Remove Album From Memory\n"+
-                "(11)->Search for Album\n"+
+                "(6)->Print Available Albums\n"+
+                "(7)->Inspect Album\n"+
+                "(8)->Remove existing Playlist\n"+
+                "(9)->Add Songs to playlist \n" +
+                "(10)->Enter the player\n"+
+                "(11)->Inspect Playlist\n"+
                 "(12)->Exit Songs App\n"+
                 "(13)->Print Available Options\n";
         System.out.println(options);
     }
-    //if user on adding songs to albums enter a number use the add to album method which adds using index number
-    //if user on adding songs to albums enter a string use the other add method.
     private static boolean CreateAlbum(){
         System.out.print("Enter Album Name: ");
         String albumName=scan.nextLine();
@@ -73,6 +42,24 @@ public class Main {
         musicApp.PrintAvailableAlbums();
 
         return step;
+    }
+    private static void EnterThePlayer(){
+        if(!musicApp.getListOfPlaylists().isEmpty()){
+            musicApp.PrintAvailablePlaylists();
+            System.out.print("Enter the playlist name: ");
+            String nameOfPlaylist=scan.nextLine();
+            Playlist play=musicApp.searchForPlaylist(nameOfPlaylist);
+            if(play!=null)
+                musicApp.playSongs(play.getPlaylist());
+            else{
+                System.out.println("\n========================");
+                System.out.println("No Playlist found!!");
+                System.out.println("==========================\n");
+            }
+        }else{
+            System.out.println("No playlist available!!");
+        }
+
     }
     private static void RemoveAlbum(){
         List<Album> albums=musicApp.returnAlbumCollection();
@@ -99,7 +86,7 @@ public class Main {
             }
         }
     }
-    public static boolean AddSongToAlbum(){
+    private static boolean AddSongToAlbum(){
         List<Album> listOfAvailableAlbums=returnListOfAvailableAlbums();
         if(!listOfAvailableAlbums.isEmpty()){
             PrintAvailableAlbums();
@@ -157,7 +144,7 @@ public class Main {
             return false;
         }
     }
-    public static boolean createPlaylist(){
+    private static boolean createPlaylist(){
         System.out.print("Enter playlist name: ");
         String playlistName=scan.nextLine();
         var result=musicApp.searchForPlaylist(playlistName);
@@ -193,7 +180,7 @@ public class Main {
         }
 
     }
-    public static boolean removePlaylist(){
+    private static boolean removePlaylist(){
         List<Playlist> available=musicApp.getListOfPlaylists();
         if(available.isEmpty()){
             return false;
@@ -205,7 +192,7 @@ public class Main {
             return process != -1;
         }
     }
-    public static void AddSongsToPlaylist(){
+    private static void AddSongsToPlaylist(){
         List<Playlist> playlistList=musicApp.getListOfPlaylists();
         if(playlistList.isEmpty()){
             System.out.println("\n========================");
@@ -250,7 +237,9 @@ public class Main {
                 if(album!=null){
                     var result=album.AddSongsToPlaylist(nameOfSong,play.getPlaylist());
                     if(result){
+                        System.out.println("\n=========================================");
                         System.out.println(nameOfSong+" added to playlist!!");
+                        System.out.println("==========================================\n");
                     }
                     else{
                         System.out.println("\n=========================================");
@@ -270,6 +259,53 @@ public class Main {
             }
         }
     }
+    private static void PrintAvailableAlbums(){
+        musicApp.PrintAvailableAlbums();
+    }
+    private static void InspectAlbum(){
+        if(!musicApp.returnAlbumCollection().isEmpty()){
+            PrintAvailableAlbums();
+            System.out.print("Enter Album Name: ");
+            String albumName=scan.nextLine();
+            Album album=musicApp.SearchForAlbum(albumName);
+            if(album!=null)
+                album.PrintAlbum();
+            else{
+                System.out.println("\n=================================");
+                System.out.println("        !!Album not found!!       ");
+                System.out.println("=================================\n");
+            }
+        }else{
+            System.out.println("\n================================");
+            System.out.println("      !!No albums available!!     ");
+            System.out.println("================================\n");
+        }
+    }
+    private static void InspectPlaylist(){
+        if(!musicApp.getListOfPlaylists().isEmpty()){
+            PrintAvailableAlbums();
+            System.out.print("Enter playlist Name: ");
+            String playlistName=scan.nextLine();
+            Playlist playlist=musicApp.searchForPlaylist(playlistName);
+            System.out.println("\n================================");
+            if(playlist!=null){
+                for(Songs s:playlist.getPlaylist()){
+                    System.out.println(s);
+                }
+
+            }else{
+                System.out.println("      !!Playlist not found!!      ");
+            }
+            System.out.println("================================\n");
+
+        }else{
+            System.out.println("\n================================");
+            System.out.println("    !!No playlists available!!    ");
+            System.out.println("================================\n");
+        }
+    }
+
+
     public static void main(String...args){
         boolean flag=true;
         System.out.println("\t\t\t\t+++++++++++++++++++++++++==WELCOME==+++++++++++++++++++++++++");
@@ -309,7 +345,9 @@ public class Main {
                             System.out.println("=======================\n");
                         }
                     }case 5-> musicApp.PrintAvailablePlaylists();
-                    case 6->{
+                    case 6-> PrintAvailableAlbums();
+                    case 7->InspectAlbum();
+                    case 8->{
                         var result=removePlaylist();
                         if(result){
                             System.out.println("\n=============================");
@@ -321,9 +359,15 @@ public class Main {
                             System.out.println("===============================\n");
                         }
                     }
-                    case 7->AddSongsToPlaylist();
-
-                    case 10->PrintOptions();
+                    case 9->AddSongsToPlaylist();
+                    case 10-> EnterThePlayer();
+                    case 11->InspectPlaylist();
+                    case 12->{
+                        System.out.println("\n==================================");
+                        System.out.println("          Exiting Song's App        ");
+                        System.out.println("==================================\n");
+                    }
+                    case 13->PrintOptions();
 
                 }
             }else{
