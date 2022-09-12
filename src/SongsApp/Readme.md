@@ -102,3 +102,9 @@
 > updates a song's title
 > #### setDuration(double new Duration): void
 > updates a song's duration
+> 
+> # Some Alternates (9/12/22)
+> In the package named SomeAlternates, you will find that class Album has been modified, instead of using an arraylist
+> directly, now we are using a private inner class that has an arrayList of songs and methods to add and find Songs.
+> Some errors in various other classes have also been fixed!!
+> 
