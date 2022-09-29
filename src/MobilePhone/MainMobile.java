@@ -70,6 +70,6 @@ public class MainMobile {
         System.out.println();
         System.out.print("Enter the Contact Number: ");
         long number=MobilePhone.scan.nextLong();
-        phone.AddContacts(name,number);
+        //phone.AddContacts(name,number);
     }
 }

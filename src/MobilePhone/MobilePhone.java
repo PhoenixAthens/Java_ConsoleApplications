@@ -1,131 +1,180 @@
 package MobilePhone;
-import java.util.Iterator;
+import SongsApp.Main;
+
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class MobilePhone {
-    public static Scanner scan=new Scanner(System.in);
-    private final ArrayList<Contacts> contacts=new ArrayList<>();
-    //you can also declare arraylist as follows
-    // public MobilePhone(){
-    //     this.contacts=new ArrayList<>();
-    //so every time an object of contacts is created, we get array list created;
+    public static final Scanner scan=new Scanner(System.in);
+    private final ArrayList<Contacts> contacts;
+    public MobilePhone(){
+        System.out.println("\n=================================================");
+        System.out.println("Loading the contacts....... ");
+        System.out.println("=================================================\n");
+        this.contacts=new ArrayList<>();
+
+    }
 
 
-    public void AddContacts(String name,long PhNum){
-        try{
-            contacts.add(Contacts.createObject(name,PhNum));
-            System.out.println("Contact Saved!");
-        }catch(Exception ex){
-            System.out.println("ERROR!");
-        }
+    public boolean AddContacts(String FirstName,String lastName,long PhNum){
+        var result=contacts.add(Contacts.createObject(FirstName,lastName,PhNum));
+        return result;
+
 
 
     }
-    public void PrintDuplicates(String name){
-        ArrayList<Integer>duplicate=FindContact(name);
-        for(Integer c:duplicate){
-            System.out.println("[Name: "+contacts.get(c).getName()+", PhNum: "+contacts.get(c).getPhoneNumber()+"]");
-        }
+    public int FindContactsWithName(String firstName){
+        AtomicInteger count= new AtomicInteger(0);
+        contacts.forEach(contacts->{
+            if(contacts.getFirstName().equals(firstName)){
+                count.getAndIncrement();
+                System.out.println(contacts);
+            }
+        });
 
+        return count.get();
     }
-    public void removeContact(String Name){
-        ArrayList<Integer> same=FindContact(Name);
-        System.out.println("You have "+same.size()+" contacts with the same name!");
-        System.out.println("They are as follows: ");
-        PrintDuplicates(Name);
-        System.out.println("Enter Y: To remove all Duplicates, To Remove particular enter (1-"+same.size()+")");
-        String reply=scan.nextLine();
-        if(reply.equals("Y")||reply.equals("y")||reply.equals("yes")||reply.equals("Yes")){
-            contacts.removeIf(a->a.getName().equals(Name));
-            System.out.println("Removal Successful\n");
-            PrintAllContacts();
+    public int FindContactWithContactNumber(long PhoneNumber){
+        AtomicInteger count=new AtomicInteger(0);
+        contacts.forEach(contact->{
+            if(contact.getPhoneNumber()==PhoneNumber){
+                count.getAndIncrement();
+                System.out.println(contact);
+            }
+        });
+        return count.get();
+    }
+
+
+    public boolean removeContact(String Name){
+        System.out.println("\n==================================================");
+        int value=FindContactsWithName(Name);
+        System.out.println("==================================================\n");
+        if(value>0){
+            Contacts contact=inputTaker();
+            return contacts.removeIf((cont)->cont.equals(contact));
         }else{
-            int value=Integer.parseInt(reply)-1;
-            int val=same.get(value);
-            contacts.remove(val);
-            System.out.println("Removal Successful\n");
-            PrintAllContacts();
-
-
+            System.out.println("Contact with Name: "+Name+", doesn't exist!!");
+            return false;
         }
     }
-    public void ModifyContact(){
-        System.out.println("\t\tEnter 1: to Modify contact via number.");
-        System.out.println("\t\tEnter 2: to Modify contact via name.");
-        int num=scan.nextInt();
+    private Contacts inputTaker(){
+        System.out.print("Enter the firstName: ");
+        String firstName=scan.nextLine();
+        System.out.print("Enter the lastName: ");
+        String lastname=scan.nextLine();
+        System.out.print("Enter the ContactNumber: ");
+        long phNum=scan.nextLong();
         scan.nextLine();
-            switch(num){
+        return Contacts.createObject(firstName,lastname,phNum);
+    }
+    public boolean ModifyContact(){
+        System.out.println("\n===========================================");
+        System.out.println("Enter 1 to find/Modify contact on the basis of Name ");
+        System.out.println("Enter 2 to find/Modify contact on the basis of PhNumber  ");
+        System.out.println("===========================================\n");
+        if(scan.hasNextInt()){
+            int input=scan.nextInt();
+            scan.nextLine();
+            switch(input){
                 case 1->{
-                    System.out.println("Enter the Phone number");
-                    long numeric=scan.nextLong();
-                    scan.nextLine();
-                    FindViaNumber(numeric);
-
+                    System.out.print("Enter contact's Name: ");
+                    modifyContactOnTheBasisOfName(scan.nextLine());
+                    return true;
                 }
                 case 2->{
-                    System.out.print("Enter the name: ");
-                    String name=scan.nextLine();
-                    ArrayList<Integer> list=FindContact(name);
-                    System.out.println("You have "+list.size()+" contacts with the same name!");
-                    PrintDuplicates(name);
-                    System.out.println("Do you want to change All the contacts(Y/N)/(1-"+list.size()+") to remove particulars!");
-                    String reply=scan.nextLine();
-                    if(reply.equals("Y")||reply.equals("y")){
-                        System.out.println("Enter the new contact number");
-                        long number=scan.nextLong();
-                        for(Integer c:list){
-                            contacts.get(c).setPhoneNumber(number);
-                        }
-                        System.out.println("Modification Successful!");
-                        scan.nextLine();
-                    }else{
-                        System.out.println("Enter the new contact number");
-                        long number=scan.nextLong();
-                        int value=Integer.parseInt(reply)-1;
-                        int val=list.get(value);
-                        contacts.get(val).setPhoneNumber(number);
-                        System.out.println("Modification Successful!");
-                        scan.nextLine();
-                    }
+                    System.out.println("Enter the contact's PhoneNumber: ");
+                    long phNum=scan.nextLong();
+                    scan.nextLine();
+                    modifyContactsOnTheBasisOfPhoneNumber(phNum);
+                    return true;
+                }
+                default->{
+                    System.out.println("Invalid input, Aborting Process...!!");
+                    return false;
                 }
             }
+        }else{
+            System.out.println("\n===========================================");
+            System.out.println("Aborting Modification!!");
+            System.out.println("===========================================\n");
+            return false;
+        }
 
-        //add functionality to change name//and also to change number not just add it there
+    }
+    private void modifyContactOnTheBasisOfName(String Name){
+        System.out.println("\n===========================================");
+        int count=FindContactsWithName(Name);
+        MainProcedure(count);
+
+    }
+    private void modifyContactsOnTheBasisOfPhoneNumber(long PhoneNumber){
+        System.out.println("\n===========================================");
+        int count=FindContactWithContactNumber(PhoneNumber);
+        MainProcedure(count);
+    }
+    private void MainProcedure(int count){
+        System.out.println("===========================================\n");
+        if(count>0){
+            Contacts contact=inputTaker();
+            contacts.forEach(con->{
+                if(con.equals(contact)){
+                    PrintOptionsForModification();
+                    modification(con);
+                }
+            });
+        }else{
+            System.out.println("Contact not found!!");
+        }
+    }
+    private void PrintOptionsForModification(){
+        System.out.println("\n=======================================");
+        System.out.println("(Option)----->(Function)");
+        System.out.println("(1)->Change contact's FirstName");
+        System.out.println("(2)->Change contact's LastName");
+        System.out.println("(3)->Change contact's PhNum");
+        System.out.println("(4)->Abort!");
+        System.out.println("======================================\n");
+    }
+    private boolean modification(Contacts contact){
+        if(scan.hasNextInt()){
+            int input=scan.nextInt();
+            scan.nextLine();
+            switch(input){
+                case 1->changeFirstName(contact);
+                case 2->changeLastName(contact);
+                case 3->changePhoneNumber(contact);
+                default->System.out.println("Aborting Modification!");
+            }
+            System.out.println("\n==========================================");
+            System.out.println("Contact successfully updated!!");
+            System.out.println("==========================================\n");
+            return true;
+        }else{
+            System.out.println("\n===================================");
+            System.out.println("Invalid input! Aborting!!");
+            System.out.println("===================================\n");
+            return false;
+        }
+    }
+    private void changeFirstName(Contacts contact){
+        System.out.print("Enter the new FirstName: ");
+        contact.setFirstName(scan.nextLine());
+    }
+    private void changeLastName(Contacts contact){
+        System.out.print("Enter the new Lastname: ");
+        contact.setLastName(scan.nextLine());
+    }
+    private void changePhoneNumber(Contacts contact){
+        System.out.print("Enter the new Phone Number: ");
+        contact.setPhoneNumber(scan.nextLong());
+        scan.nextLine();
     }
     public void PrintAllContacts(){
-
-        if(contacts.size()>0){
-            for (Contacts c : contacts) {
-                System.out.println("Name: " + c.getName() + ", PhNum: " + c.getPhoneNumber());
-
-            }
-            System.out.println("YOU HAVE TOTAL OF " + contacts.size() + " CONTACTS");
-        }else{
-            System.out.println("NO CONTACTS FOUND!");
-        }
-
+        contacts.forEach(System.out::println);
     }
-    public void FindViaNumber(long Number){
-        for(Contacts x:contacts){
-            if(x.getPhoneNumber()==Number){
-                String name=x.getName();
-                PrintDuplicates(name);
-                System.out.println("Enter the new name");
-                String NewName=scan.nextLine();
-                x.setName(NewName);
-            }
 
-        }
-    }
-    public ArrayList FindContact(String name){
-        ArrayList<Integer> duplicateIndex=new ArrayList<>();
-        for(Contacts C:contacts){
-            if(C.getName().equals(name)){
-                duplicateIndex.add(contacts.indexOf(C));
-            }
-        }
-        return duplicateIndex;
 
-    }
 
 }
