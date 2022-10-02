@@ -1,9 +1,8 @@
 package MobilePhone;
 public class MainMobile {
-    private static boolean flag;
+    private static boolean flag=false;
     private static final MobilePhone phone=new MobilePhone();
     public static void main(String... args){
-        flag=false;
         MobileStart();
         while(flag){
             System.out.println("Enter you choice (1-8)");
@@ -16,17 +15,24 @@ public class MainMobile {
                     case 3 -> ModifyContacts();
                     case 4 -> RemoveContact();
                     case 5 -> Find_SearchContacts();
+                    case 6-> Find_SearchContactsUsingNumber();
                     case 7 -> PrintOptions();
                     case 8 -> flag = false;
-                    default -> System.out.println("<INVALID ENTRY!>");
+                    default -> {
+                        System.out.println("\n=======================================");
+                        System.out.println("++++++++++++<INVALID ENTRY!>+++++++++++++");
+                        System.out.println("=======================================\n");
+                    }
                 }
             }else{
-                System.out.println("Invalid Entry try Again!");
                 MobilePhone.scan.nextLine();
+                System.out.println("\n=======================================");
+                System.out.println("Invalid Entry try Again!");
+                System.out.println("=======================================\n");
             }
         }
     }
-    public static void MobileStart(){
+    private static void MobileStart(){
         flag=true;
         System.out.println("Phone is Starting");
         System.out.println("++++++++++++++++++WELCOME++++++++++++++++++++");
@@ -34,42 +40,82 @@ public class MainMobile {
 
 
     }
-    public static void PrintOptions(){
+    private static void PrintOptions(){
+        System.out.println("\n=======================================");
         System.out.println("\t\t(Key)      (Function)        ");
         System.out.println("\t\t (1) Print list of Contacts  ");
         System.out.println("\t\t (2) Add new Contact         ");
         System.out.println("\t\t (3) Update Existing Contact ");
         System.out.println("\t\t (4) Remove Contact          ");
-        System.out.println("\t\t (5) Find/Search Contact     ");
-        System.out.println("\t\t (6) Don't use 6! PLZ        ");
+        System.out.println("\t\t (5) Find/Search Contact (using Name)  ");
+        System.out.println("\t\t (6) Find/Search Contact (using PhNumber");
         System.out.println("\t\t (7) Show Options            ");
         System.out.println("\t\t (8) Exit the app!           ");
+        System.out.println("=======================================\n");
     }
-    public static void PrintContacts(){
+    private static void PrintContacts(){
         phone.PrintAllContacts();
     }
-    public static void Find_SearchContacts(){
+    private static void Find_SearchContacts(){
         System.out.print("Enter the name: ");
         String name=MobilePhone.scan.nextLine();
-        phone.PrintDuplicates(name);
-        System.out.println();
+        System.out.println("\n==============================================");
+        phone.FindContactsWithName(name);
+        System.out.println("==============================================\n");
     }
-    public static void RemoveContact(){
+    private static void Find_SearchContactsUsingNumber(){
+        System.out.print("Enter contact Number: ");
+        long number= MobilePhone.scan.nextLong();
+        MobilePhone.scan.nextLine();
+        System.out.println("\n==============================================");
+        phone.FindContactWithContactNumber(number);
+        System.out.println("==============================================\n");
+
+    }
+    private static void RemoveContact(){
         System.out.print("Enter the contact name: ");
         String name=MobilePhone.scan.nextLine();
-        phone.removeContact(name);
-        System.out.println();
+        var boo=phone.removeContact(name);
+        if(boo){
+            System.out.println("\n=======================================");
+            System.out.println("Contact successfully removed!");
+            System.out.println("=======================================\n");
+        }
     }
-    public static void ModifyContacts(){
-        phone.ModifyContact();
-        System.out.println();
+    private static void ModifyContacts(){
+        var result=phone.ModifyContact();
+        if(!result){
+            System.out.println("\n================================");
+            System.out.println("Issues in modification!!");
+            System.out.println("================================\n");
+        }
     }
-    public static void AddContact(){
-        System.out.print("Enter the name: ");
-        String name=MobilePhone.scan.nextLine();
-        System.out.println();
-        System.out.print("Enter the Contact Number: ");
-        long number=MobilePhone.scan.nextLong();
-        //phone.AddContacts(name,number);
+    private static void AddContact() {
+        System.out.print("contact's name: ");
+        String firstName= MobilePhone.scan.nextLine();
+        System.out.print("contact's lastName: ");
+        String lastName= MobilePhone.scan.nextLine();
+        System.out.print("Phone Number: ");
+        if(MobilePhone.scan.hasNextLong()){
+            long PhNum= MobilePhone.scan.nextLong();
+            MobilePhone.scan.nextLine();
+            var result=phone.AddContacts(firstName,lastName,PhNum);
+            if(result){
+                phone.accessContacts().sort(null);
+                System.out.println("\n===========================================");
+                System.out.println("Contact successfully added!!");
+                System.out.println("===========================================\n");
+            }else{
+                System.out.println("\n===============================================================");
+                System.out.println("Error Saving Contact, check if the contact already exists!!");
+                System.out.println("===============================================================\n");
+            }
+        }
+        else{
+            MobilePhone.scan.nextLine();
+            System.out.println("\n===========================================");
+            System.out.println("Contact Number has to be a Numerical Value");
+            System.out.println("===========================================\n");
+        }
     }
 }

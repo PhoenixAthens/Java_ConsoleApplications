@@ -1,5 +1,4 @@
 package MobilePhone;
-import SongsApp.Main;
 
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -15,14 +14,18 @@ public class MobilePhone {
         this.contacts=new ArrayList<>();
 
     }
-
-
+    public ArrayList<Contacts> accessContacts(){
+        return contacts;
+    }
     public boolean AddContacts(String FirstName,String lastName,long PhNum){
-        var result=contacts.add(Contacts.createObject(FirstName,lastName,PhNum));
-        return result;
+        Contacts contact=Contacts.createObject(FirstName,lastName,PhNum);
+        for(Contacts contra:contacts){
+            if(contra.equals(contact)){
+                return false;
+            }
+        }
 
-
-
+        return contacts.add(contact);
     }
     public int FindContactsWithName(String firstName){
         AtomicInteger count= new AtomicInteger(0);
@@ -55,7 +58,9 @@ public class MobilePhone {
             Contacts contact=inputTaker();
             return contacts.removeIf((cont)->cont.equals(contact));
         }else{
+            System.out.println("\n=======================================================");
             System.out.println("Contact with Name: "+Name+", doesn't exist!!");
+            System.out.println("=======================================================\n");
             return false;
         }
     }
@@ -79,11 +84,13 @@ public class MobilePhone {
             scan.nextLine();
             switch(input){
                 case 1->{
+                    System.out.println("\n==========================================");
                     System.out.print("Enter contact's Name: ");
                     modifyContactOnTheBasisOfName(scan.nextLine());
                     return true;
                 }
                 case 2->{
+                    System.out.println("\n==========================================");
                     System.out.println("Enter the contact's PhoneNumber: ");
                     long phNum=scan.nextLong();
                     scan.nextLine();
@@ -91,7 +98,9 @@ public class MobilePhone {
                     return true;
                 }
                 default->{
+                    System.out.println("\n==========================================");
                     System.out.println("Invalid input, Aborting Process...!!");
+                    System.out.println("==========================================\n");
                     return false;
                 }
             }
@@ -145,6 +154,7 @@ public class MobilePhone {
                 case 1->changeFirstName(contact);
                 case 2->changeLastName(contact);
                 case 3->changePhoneNumber(contact);
+                //case 4->removeContact(contact.getFirstName());
                 default->System.out.println("Aborting Modification!");
             }
             System.out.println("\n==========================================");
@@ -172,8 +182,18 @@ public class MobilePhone {
         scan.nextLine();
     }
     public void PrintAllContacts(){
-        contacts.forEach(System.out::println);
+        if(contacts.isEmpty()){
+            System.out.println("\n=======================================");
+            System.out.println("0 contacts found!!");
+            System.out.println("=======================================\n");
+        }else{
+            System.out.println("\n=======================================");
+            contacts.forEach(System.out::println);
+            System.out.println("=======================================\n");
+        }
+
     }
+
 
 
 

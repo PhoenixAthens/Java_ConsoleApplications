@@ -1,6 +1,6 @@
 # Date: 29th of September 2022
 ### This file is to log the recent changes!
-#### Class: Contacts
+### Class: Contacts
 > ### Methods: 
 > #### equals(Object obj):boolean
 > This method compares two contact objects on the basis of PhoneNumber,
@@ -47,3 +47,27 @@
 > #### PrintAllContacts():void
 > Prints all contacts to the console
 > 
+> 
+# Date: 3rd of October 2022
+### Class: MobilePhone
+> ### Methods:
+> #### AddContacts(String FirstName,String lastName, long PhNum):boolean
+> to prevent duplicates the method has been modified to check for duplicates, every time a new contact is added
+
+### Class: MainMobile
+> ### Methods:
+> #### AddContact():void
+> The method internally calls AddContacts(String....):boolean method of class MobilePhone, to add a new contact to 
+> memory
+> #### ModifyContact():void
+> The method has been suitably modified to match method ModifyContact():boolean from in class MobilePhone
+> #### RemoveContact():void
+> The method has been suitably modified to match removeContact(String name):boolean from class MobilePhone
+> #### Find_SearchContacts():void
+> Method modified to accommodate new method FindContactsWithName(String name):int
+> #### (New method) Find_SearchContactsUsingNumber():void
+> find the contact using PhNumber as the search parameter!!
+
+### Future 
+> ### Class:MobilePhone
+> Create a conflict in add Method everytime a duplicate is encountered, to provide user the authority over modification.
